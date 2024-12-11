@@ -1,0 +1,30 @@
+services:
+    postgres:
+        image: ankane/pgvector
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_DB=postgres
+    s3:
+        image: minio/minio
+        command: server /data
+        ports:
+            - "9000:9000"
+        environment:
+            - MINIO_ACCESS_KEY=minio
+            - MINIO_SECRET_KEY=minio123
+
+    caddy:
+        image: caddy
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile
+        environment:
+            - CADDY_EMAIL=your-email@example.com
+
+volumes:
+    postgres:
