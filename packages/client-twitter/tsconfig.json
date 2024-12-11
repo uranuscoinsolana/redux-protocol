@@ -5,6 +5,10 @@
         "rootDir": "src"
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "../redux-extensions/twitter-extensions/review-engine.ts",
+        "../redux-extensions/twitter-extensions/prompts.ts",
+        "../redux-extensions/twitter-extensions/manage-agent.ts",
+        "../redux-extensions/twitter-extensions/weight-manager.ts"
     ]
 }

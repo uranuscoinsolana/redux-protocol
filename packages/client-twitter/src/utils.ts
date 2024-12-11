@@ -168,7 +168,11 @@ export async function sendTweet(
     content: Content,
     roomId: UUID,
     twitterUsername: string,
-    inReplyTo: string
+    inReplyTo: string,
+    mediaData: {
+        data: Buffer;
+        mediaType: string;
+    }[] = []
 ): Promise<Memory[]> {
     const tweetChunks = splitTweetContent(content.text);
     const sentTweets: Tweet[] = [];
@@ -179,7 +183,8 @@ export async function sendTweet(
             async () =>
                 await client.twitterClient.sendTweet(
                     chunk.trim(),
-                    previousTweetId
+                    previousTweetId,
+                    mediaData
                 )
         );
         const body = await result.json();
@@ -199,7 +204,7 @@ export async function sendTweet(
                 permanentUrl: `https://twitter.com/${twitterUsername}/status/${tweetResult.rest_id}`,
                 hashtags: [],
                 mentions: [],
-                photos: [],
+                photos: tweetResult.photos,
                 thread: [],
                 urls: [],
                 videos: [],

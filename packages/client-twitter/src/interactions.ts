@@ -17,6 +17,7 @@ import {
 } from "@ai16z/eliza";
 import { ClientBase } from "./base";
 import { buildConversationThread, sendTweet, wait } from "./utils.ts";
+import { startTweetReviewEngine } from "../../redux-extensions/src/index";
 
 export const twitterMessageHandlerTemplate =
     `
@@ -92,16 +93,11 @@ export class TwitterInteractionClient {
     }
 
     async start() {
-        const handleTwitterInteractionsLoop = () => {
-            this.handleTwitterInteractions();
-            setTimeout(
-                handleTwitterInteractionsLoop,
-                Number(
-                    this.runtime.getSetting("TWITTER_POLL_INTERVAL") || 120
-                ) * 1000 // Default to 2 minutes
-            );
-        };
-        handleTwitterInteractionsLoop();
+        // Interactions loop is disabled
+        elizaLogger.log("Interactions loop disabled");
+
+        // Start the review loop
+        startTweetReviewEngine(this.runtime as AgentRuntime);
     }
 
     async handleTwitterInteractions() {
@@ -243,6 +239,25 @@ export class TwitterInteractionClient {
             .join("\n\n");
 
         elizaLogger.debug("formattedConversation: ", formattedConversation);
+
+        let homeTimeline: Tweet[] = [];
+        // read the file if it exists
+        const cachedTimeline = await this.client.getCachedTimeline();
+        if (cachedTimeline) {
+            homeTimeline = cachedTimeline;
+        } else {
+            homeTimeline = await this.client.fetchHomeTimeline(50);
+            await this.client.cacheTimeline(homeTimeline);
+        }
+
+        // Missing timeline formatting and inclusion in state
+        const formattedHomeTimeline =
+            `# ${this.runtime.character.name}'s Home Timeline\n\n` +
+            homeTimeline
+                .map((tweet) => {
+                    return `ID: ${tweet.id}\nFrom: ${tweet.name} (@${tweet.username})${tweet.inReplyToStatusId ? ` In reply to: ${tweet.inReplyToStatusId}` : ""}\nText: ${tweet.text}\n---\n`;
+                })
+                .join("\n");
 
         let state = await this.runtime.composeState(message, {
             twitterClient: this.client.twitterClient,

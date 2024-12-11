@@ -5,8 +5,9 @@
     "type": "module",
     "scripts": {
         "start": "node --loader ts-node/esm src/index.ts",
-        "dev": "node --loader ts-node/esm src/index.ts",
-        "check-types": "tsc --noEmit"
+        "dev": "node --loader ts-node/esm src/index.ts --characters=\"../characters/davinci.character.json\",\"../characters/admin.character.json\"",
+        "check-types": "tsc --noEmit",
+        "start:server": "tsc && node --loader ts-node/esm src/index.ts --characters=\"../characters/davinci.character.json\",\"../characters/admin.character.json\""
     },
     "nodemonConfig": {
         "watch": [
