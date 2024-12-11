@@ -33,6 +33,15 @@ export const tweetQueries = {
         }
     },
 
+    getTweets: async (limit: number, offset: number): Promise<Tweet[]> => {
+        return await db
+            .select()
+            .from(tweets)
+            .orderBy(desc(tweets.createdAt))
+            .limit(limit)
+            .offset(offset);
+    },
+
     updateTweetStatus: async (
         tweetId: string,
         status: string,
