@@ -27,8 +27,8 @@ export const getNextTweetType = async (): Promise<string> => {
         .orderBy(desc(tweets.createdAt))
         .limit(limit);
     const tweetTypes = lastTweets.map((tweet) => tweet.mediaType);
-    if (!tweetTypes.includes("image")) {
-        return "image";
+    if (!tweetTypes.includes("image/jpeg")) {
+        return "image/jpeg";
     }
     return "text";
 };

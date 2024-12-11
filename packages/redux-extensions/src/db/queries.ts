@@ -33,6 +33,15 @@ export const tweetQueries = {
         }
     },
 
+    getSentTweets: async (agentId: string, limit: number): Promise<Tweet[]> => {
+        return await db
+            .select()
+            .from(tweets)
+            .where(and(eq(tweets.agentId, agentId), eq(tweets.status, "sent")))
+            .orderBy(desc(tweets.createdAt))
+            .limit(limit);
+    },
+
     getTweets: async (limit: number, offset: number): Promise<Tweet[]> => {
         return await db
             .select()
@@ -41,7 +50,6 @@ export const tweetQueries = {
             .limit(limit)
             .offset(offset);
     },
-
     updateTweetStatus: async (
         tweetId: string,
         status: string,
@@ -57,7 +65,6 @@ export const tweetQueries = {
             throw error;
         }
     },
-
     saveTweetObject: async (tweet: Tweet) => {
         try {
             const result = await db
@@ -70,7 +77,6 @@ export const tweetQueries = {
             throw error;
         }
     },
-
     saveTweet: async (
         content: string,
         agentId: string,

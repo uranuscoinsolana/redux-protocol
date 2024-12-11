@@ -467,11 +467,21 @@ export class TwitterPostClient {
                 }
             );
             elizaLogger.log("State composed. Now composing context.");
+
+            const recentSentTweets = await tweetQueries.getSentTweets(
+                this.runtime.agentId,
+                15
+            );
+            const recentSentTweetsText = recentSentTweets
+                .map((tweet) => {
+                    return `#${tweet.id}\n${tweet.content}\n---\n`;
+                })
+                .join("\n");
             const templates = {
                 v1: twitterPostTemplateV1,
                 v0: twitterPostTemplate,
             };
-            state.recentTweets = `Here are your recent tweets:\n${formattedHomeTimeline}`;
+            state.recentTweets = `\nHere are your recent tweets:\n${recentSentTweetsText}`;
 
             const context = composeContext({
                 state,

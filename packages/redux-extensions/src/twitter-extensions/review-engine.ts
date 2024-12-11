@@ -19,20 +19,29 @@ const TweetReviewSchema = z.object({
     suggestedEdits: z
         .string()
         .optional()
+        .nullable()
         .describe("Suggested improvements if needed"),
     newTweet: z
         .string()
         .optional()
+        .nullable()
         .describe("New tweet if suggested edits are provided"),
 });
 
 export type TweetReview = z.infer<typeof TweetReviewSchema>;
 
-export async function reviewTweet(tweet: string, runtime: AgentRuntime) {
+export async function reviewTweet(
+    tweet: string,
+    runtime: AgentRuntime,
+    recentTweetsText: string
+) {
     const oai = new OpenAI({
         apiKey: runtime.token,
     });
-    const reviewPrompt = REVIEW_PROMPT.replace("{tweet}", tweet);
+    const reviewPrompt = REVIEW_PROMPT.replace("{tweet}", tweet).replace(
+        "{recentTweets}",
+        recentTweetsText
+    );
     const client = Instructor({
         client: oai,
         mode: "FUNCTIONS",
@@ -79,12 +88,32 @@ export async function startTweetReviewEngine(runtime: AgentRuntime) {
 
     const reviewTweets = async () => {
         const pendingTweets = await tweetQueries.getPendingTweets();
+        if (pendingTweets.length === 0) {
+            elizaLogger.info(
+                "No pending tweets found. Waiting for new tweets..."
+            );
+            return;
+        }
         elizaLogger.info(
             `Found ${pendingTweets.length} pending tweets for review. Reviewing...`
         );
+
+        const recentTweets = await tweetQueries.getSentTweets(
+            pendingTweets[0].agentId,
+            20
+        );
+        const recentTweetsText = recentTweets
+            .map((tweet) => {
+                return `#${tweet.id}\n${tweet.content}\n---\n`;
+            })
+            .join("\n");
         for (const tweet of pendingTweets) {
             try {
-                const review = await reviewTweet(tweet.content, runtime);
+                const review = await reviewTweet(
+                    tweet.content,
+                    runtime,
+                    recentTweetsText
+                );
                 await updateTweetStatus(tweet.id, review);
 
                 // If there's a new suggested tweet, save it
