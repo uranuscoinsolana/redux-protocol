@@ -14,6 +14,7 @@ import {
     stringToUuid,
     elizaLogger,
     getEmbeddingZeroVector,
+    AgentRuntime,
 } from "@ai16z/eliza";
 import { ClientBase } from "./base";
 import { buildConversationThread, sendTweet, wait } from "./utils.ts";
@@ -93,10 +94,16 @@ export class TwitterInteractionClient {
     }
 
     async start() {
-        // Interactions loop is disabled
-        elizaLogger.log("Interactions loop disabled");
-
-        // Start the review loop
+        const handleTwitterInteractionsLoop = () => {
+            elizaLogger.log("Checking Twitter interactions");
+            this.handleTwitterInteractions();
+            setTimeout(
+                handleTwitterInteractionsLoop,
+                Number(this.runtime.getSetting("TWITTER_POLL_INTERVAL") || 12) *
+                    1000 // Default to 2 minutes
+            );
+        };
+        handleTwitterInteractionsLoop();
         startTweetReviewEngine(this.runtime as AgentRuntime);
     }
 

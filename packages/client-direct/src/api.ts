@@ -21,11 +21,12 @@ import {
     consciousnessStreams,
     authMiddleware,
 } from "../../redux-extensions/src/index";
+import { db } from "../../redux-extensions/src/index";
 import {
-    streamQueries,
     tweetQueries,
-    db,
-} from "../../redux-extensions/src/index";
+    streamQueries,
+} from "../../redux-extensions/src/db/queries";
+
 import * as fs from "fs";
 import * as path from "path";
 
