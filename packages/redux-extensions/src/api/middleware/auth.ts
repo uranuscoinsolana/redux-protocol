@@ -11,7 +11,7 @@ export function authMiddleware(
     next: NextFunction
 ) {
     const authToken = req.headers.authorization?.split(" ")[1];
-    const configuredToken = process.env.API_AUTH_TOKEN || "davinci-auth-token";
+    const configuredToken = process.env.API_AUTH_TOKEN;
 
     if (!configuredToken) {
         elizaLogger.warn("API_AUTH_TOKEN not configured");

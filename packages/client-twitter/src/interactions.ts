@@ -120,7 +120,11 @@ export class TwitterInteractionClient {
                     SearchMode.Latest
                 )
             ).tweets;
-
+            elizaLogger.log(
+                "tweetCandidates: ",
+                tweetCandidates,
+                `for user @${twitterUsername}`
+            );
             // de-duplicate tweetCandidates with a set
             const uniqueTweetCandidates = [...new Set(tweetCandidates)];
             // Sort tweet candidates by ID in ascending order

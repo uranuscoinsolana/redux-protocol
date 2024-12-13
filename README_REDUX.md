@@ -1,33 +1,37 @@
 # Eliza Reduxhq.ai
 
-## Getting Started
+Welcome to the Reduxhq.ai fork of the Eliza project.
 
-Reduxhq.ai relies on a postgres database to store the data.
+## Getting Started
 
 ### Prerequisites
 
-Postgres - Docker compose for postgres with pgvector extension or compatible Database URL.
-S3 - S3 compatible storage for logging or use docker compose which comes with minio.
+**This is a work in progress. For now you can follow the default Eliza setup to get up and running.**
 
-### Setup
+#### Setup [WIP]
+
+- Database - Postgres - Docker compose for Postgres with Pgvector extension or compatible Database URL.
+- Storage - Provide S3 credentials or setup compatible storage for logging or use docker compose which comes with Minio.
 
 1. Clone the repository
-2. Run `docker compose up -d` to start the Postgres database or add a `POSTGRES_URL` to the `.env` file.
+2. [TODO]Run `docker compose -f compose-dev.yml up` to start the local Postgres + S3 Minio database.
 3. Run `pnpm install`
 4. Run `pnpm dev`
 
-## December Roadmap
+## TODO
 
-Minor
-
-- [ ] Setup docs, refactor db to root folder
+- [ ] Update setup docs, refactor db to root folder
+- [ ] Code quality - Refactor redux-extensions to follow Eliza plugin structure
 - [ ] Remove hardcoded character files
-- [ ] Add prompt to database
-- [ ] Deployment to VPS
-- [ ] Deployment to fly.io instructions
-
-Major
-
+- [ ] Move prompts/characters to database in prep for evals, admin api and multi-agent support
+- [ ] Deployment docs to VPS/Fly/Fargate/GCP
 - [ ] Multi-agent support
-- [ ] Simple s3 backed logging service
+- [ ] Admin api and evals
+- [ ] Update to latest eliza main branch
+
+## Deployment
+
+- [ ] S3 - R2/Tigris for cheap storage
+- [ ] Postgres - Fly.io, Neon(free tier), Supabase(free tier)
+- [ ] Multi-agent support
 - [ ] Reuse existing client to provide a simple UI for admin and agent management.

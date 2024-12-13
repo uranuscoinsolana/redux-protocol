@@ -13,6 +13,13 @@ const TweetReviewSchema = z.object({
         .boolean()
         .describe("Whether the tweet is appropriate for posting"),
     confidence: z.number().describe("Confidence score between 0 and 1"),
+    repetitionScore: z
+        .number()
+        .optional()
+        .nullable()
+        .describe(
+            "Score between 0 and 100 indicating how similar the tweet is to previous tweets"
+        ),
     reasoning: z
         .string()
         .describe("Detailed explanation of the review decision"),

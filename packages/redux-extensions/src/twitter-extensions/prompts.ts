@@ -247,6 +247,4 @@ Avoid commonly used LLM words like 'delve','An intricate interplay', 'Underscore
 Ensure the tweet begins and ends with unique phrasing compared to recent posts.
 Avoid repetitive patterns or overused transitions like ‘In the’ or ‘Finally.
 
-{{recentTweets}}
-
 `;
