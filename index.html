@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uranus Coin Command Center</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #terminal {
+            width: 90%;
+            max-width: 800px;
+            background: #001a33;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            position: relative;
+        }
+
+        #output {
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 400px;
+            margin-bottom: 10px;
+        }
+
+        #input {
+            display: flex;
+            align-items: center;
+        }
+
+        #input span {
+            margin-right: 5px;
+        }
+
+        #inputField {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: #00ffcc;
+            font-family: inherit;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .planet {
+            position: absolute;
+            top: 10%;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #00aaff 0%, #000 60%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="planet"></div>
+    <div id="terminal">
+        <div id="output"></div>
+        <div id="input">
+            <span>&gt;</span>
+            <input id="inputField" type="text" autocomplete="off" placeholder="Type a command...">
+        </div>
+    </div>
+
+    <script>
+        const output = document.getElementById('output');
+        const inputField = document.getElementById('inputField');
+
+        const commands = {
+            help: 'Available commands:\nabout - Learn about Uranus Coin\nroadmap - View our milestones\nbuy - Find out how to buy Uranus Coin\nstats - See live stats of the coin\nteam - Meet the team\nuranus-joke - Hear a funny Uranus joke!',
+            about: 'Uranus Coin is the interstellar cryptocurrency, aiming to revolutionize space commerce.',
+            roadmap: 'Roadmap:\n1. Launch Uranus Coin\n2. Build partnerships\n3. Explore interplanetary trading!\n4. Moonshot to Uranus! (pun intended)',
+            buy: 'Visit https://uranuscoin.exchange to buy Uranus Coin now!',
+            stats: 'Current Uranus Coin price: $42.42 (updated live).',
+            team: 'Team Members:\n- Captain Crypto\n- Blockchain Bob\n- Stellar Sally',
+            'uranus-joke': 'Why did Uranus break up with Saturn? Because it needed space!'
+        };
+
+        function appendOutput(text) {
+            output.textContent += `\n${text}`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        inputField.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const command = inputField.value.trim();
+                appendOutput(`> ${command}`);
+
+                if (commands[command]) {
+                    appendOutput(commands[command]);
+                } else {
+                    appendOutput('Unknown command. Type "help" for a list of commands.');
+                }
+
+                inputField.value = '';
+            }
+        });
+
+        appendOutput('Welcome to Uranus Coin Command Center.\nType "help" to explore.');
+    </script>
+</body>
+</html>
